@@ -218,8 +218,19 @@ function chartScreen(vals) {
   if (vals.panelOpen) mainRow.appendChild(panelAside(vals, T));
   container.appendChild(mainRow);
   container.appendChild(h('p', { style: `margin:14px 0 0; font-size:11px; color:${T.ghost}; letter-spacing:1px; text-align:center;` }, '點擊任一宮位，查看三方四正與解盤　·　接入真實排盤'));
+  container.appendChild(siteFooter(T));
 
   return container;
+}
+
+function siteFooter(T) {
+  return h('div', {
+    style: `position:relative; z-index:70; margin:18px 0 0; padding-top:14px; border-top:1px solid ${T.headerLine}; display:flex; flex-direction:column; align-items:center; gap:4px; font-size:12px; color:${T.ghost}; letter-spacing:.5px; text-align:center;`,
+  }, [
+    h('p', { style: 'margin:0;' }, '本站為免費線上排盤工具，內容僅供娛樂與參考，不構成醫療、法律、投資等專業建議'),
+    h('p', { style: 'margin:0;' }, '聯絡信箱：kanglog.ziwei@gmail.com'),
+    h('p', { style: 'margin:0;' }, '© 2026 KANG.LOG ・ 排盤引擎 iztro'),
+  ]);
 }
 
 function panelAside(vals, T) {
