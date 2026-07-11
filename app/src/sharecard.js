@@ -97,12 +97,15 @@ function ensureCardRoot() {
 
 // 不能用原始 style 字串子字串比對——瀏覽器序列化 style 屬性時會重排空白
 //（例如 "grid-template-columns:1fr" 存回 DOM 會變成 "grid-template-columns: 1fr"），
-// 子字串比對因此完全比對不到。改用 computed style 篩選：命盤格會設 aspect-ratio，
-// 且不在任何 position:fixed 的祖先內（分享卡自己的隱藏容器、彈窗預覽都是 fixed）。
+// 子字串比對因此完全比對不到。改用「不在任何 position:fixed 祖先內」篩選——
+// 分享卡自己的隱藏容器、彈窗預覽格都是 fixed，命盤格本體不是。
+// 原本還多篩了 aspect-ratio!=='auto'，但手機窄版「2×6 重排」佈局時
+// gridAspect 本來就設成 auto（見 state.js），會被這條件誤篩掉，導致手機上
+// 分享卡命盤區塊整個空白——input 表單畫面才會出現的另一個 grid-template-columns
+// 只在未排盤時渲染，跟分享彈窗不會同時存在，所以拿掉這條件也不會誤抓到它。
 function findLiveGrid() {
   const candidates = document.querySelectorAll('div[style*="grid-template-columns"]');
   for (const el of candidates) {
-    if (getComputedStyle(el).aspectRatio === 'auto') continue;
     let node = el;
     let insideFixed = false;
     while (node && node !== document.body) {
@@ -133,25 +136,34 @@ function buildCard(vals) {
   card.appendChild(h('div', { className: 'share-card__divider', style: `background:linear-gradient(90deg, transparent, ${T.line}, transparent);` }));
 
   const chartWrap = h('div', { className: 'share-card__chart-wrap' });
-  const liveGrid = findLiveGrid();
-  if (liveGrid) {
-    const clone = liveGrid.cloneNode(true);
-    const naturalW = liveGrid.offsetWidth || CARD_W;
-    const naturalH = liveGrid.offsetHeight || naturalW;
-    const available = CARD_W - 60;
-    const scale = Math.min(available / naturalW, (CARD_H * 0.6) / naturalH, 1);
-    const inner = h('div', {
-      className: 'share-card__chart-inner',
-      style: `width:${naturalW}px; height:${naturalH}px; transform:scale(${scale});`,
-    }, clone);
-    chartWrap.appendChild(inner);
-  }
   card.appendChild(chartWrap);
 
   card.appendChild(h('div', { className: 'share-card__divider', style: `background:linear-gradient(90deg, transparent, ${T.line}, transparent);` }));
   card.appendChild(h('div', { className: 'share-card__footer', style: `color:${T.ghost};` }, SITE_URL));
 
   root.appendChild(card);
+
+  // chartWrap 要等卡片實際掛進 DOM、header/birth/footer 都排版完，才量得出
+  // flex 剩下的真實可用空間——先前用固定的 CARD_H*0.6 用猜的，猜小了會讓命盤
+  // 格被 chart-wrap 的 overflow:hidden 裁掉最下面一列，猜大了則留白過多。
+  const liveGrid = findLiveGrid();
+  if (liveGrid) {
+    const clone = liveGrid.cloneNode(true);
+    const naturalW = liveGrid.offsetWidth || CARD_W;
+    const naturalH = liveGrid.offsetHeight || naturalW;
+    // 留 3% 安全邊界：toPng 實際用 SVG foreignObject 重新走一次版面計算，
+    // 跟這裡量到的 live DOM clientHeight 會有幾像素的字型度量誤差，貼著量到的
+    // 邊界剛好會被 overflow:hidden 咬掉最下面一列。
+    const availW = (chartWrap.clientWidth || CARD_W - 60) * 0.97;
+    const availH = (chartWrap.clientHeight || naturalH) * 0.97;
+    const scale = Math.min(availW / naturalW, availH / naturalH, 1);
+    const inner = h('div', {
+      className: 'share-card__chart-inner',
+      style: `width:${naturalW}px; height:${naturalH}px; transform:scale(${scale});`,
+    }, clone);
+    chartWrap.appendChild(inner);
+  }
+
   return card;
 }
 
