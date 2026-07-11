@@ -268,6 +268,9 @@ function panelAside(vals, T) {
     onclick: vals.openAiPanel,
     style: `margin-top:16px; width:100%; padding:11px 0; background:transparent; border:1.5px solid ${T.cinnabar}; color:${T.cinnabar}; font-family:'Noto Serif TC',serif; font-size:14px; font-weight:700; letter-spacing:4px; cursor:pointer; border-radius:2px; transition:all .2s;`,
   }, '✦ AI 綜合解盤'));
+  aside.appendChild(h('p', {
+    style: `margin:6px 0 0; font-size:10.5px; color:${T.ghost2}; letter-spacing:.5px; text-align:center;`,
+  }, '✦ AI 依全盤十二宮與當前大限／流年綜合解讀・每日 5 次'));
 
   return aside;
 }
