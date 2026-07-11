@@ -1,0 +1,8 @@
+name = "ziwei-ai-interpret"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
+workers_dev = true
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "7960ba4ad3744133b0612f91ca03d503"
