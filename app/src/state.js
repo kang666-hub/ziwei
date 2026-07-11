@@ -11,6 +11,7 @@ import {
   currentDecadalIndex,
   currentLunarMonth,
 } from './adapter.js';
+import { fetchAiInterpretation, parseAiSections } from './ai.js';
 
 const CURRENT_YEAR = new Date().getFullYear();
 const CURRENT_LUNAR_MONTH = currentLunarMonth();
@@ -31,6 +32,11 @@ function initialState() {
     decadalIndex: null,
     yearlyYear: CURRENT_YEAR,
     monthlyMonth: CURRENT_LUNAR_MONTH,
+    aiPanelOpen: false,
+    aiLoading: false,
+    aiText: null,
+    aiError: null,
+    aiCache: {},
   };
 }
 
@@ -204,6 +210,24 @@ export function computeVals(store) {
 
   const birth = chart.center.birth;
 
+  // ── 新增：AI 綜合解盤（呼叫 Cloudflare Worker 代理，同一張盤+同一運限選擇快取）──
+  const aiCacheKey = `${tab}|${s.decadalIndex}|${s.yearlyYear}|${s.monthlyMonth}`;
+  const openAiPanel = () => {
+    const cached = s.aiCache[aiCacheKey];
+    if (cached) {
+      store.setState({ aiPanelOpen: true, aiLoading: false, aiError: null, aiText: cached });
+      return;
+    }
+    store.setState({ aiPanelOpen: true, aiLoading: true, aiError: null, aiText: null });
+    fetchAiInterpretation(chart, layer).then((text) => {
+      store.setState((st) => ({ aiLoading: false, aiText: text, aiCache: { ...st.aiCache, [aiCacheKey]: text } }));
+    }).catch((err) => {
+      store.setState({ aiLoading: false, aiError: { message: err.message || 'AI 解盤服務暫時無法使用，請稍後再試' } });
+    });
+  };
+  const closeAiPanel = () => store.setState({ aiPanelOpen: false });
+  const aiSections = s.aiText ? parseAiSections(s.aiText) : [];
+
   Object.assign(vals, {
     center: chart.center,
     pillars: chart.center.pillars,
@@ -270,6 +294,13 @@ export function computeVals(store) {
     openShare: () => store.setState({ shareOpen: true }),
     closeShare: () => store.setState({ shareOpen: false }),
     stopClick: (e) => e.stopPropagation(),
+
+    openAiPanel,
+    closeAiPanel,
+    aiPanelOpen: s.aiPanelOpen,
+    aiLoading: s.aiLoading,
+    aiError: s.aiError,
+    aiSections,
   });
 
   return vals;

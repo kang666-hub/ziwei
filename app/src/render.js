@@ -263,7 +263,50 @@ function panelAside(vals, T) {
     h('span', {}, [h('span', { style: `color:${T.gold};` }, '三方四正'), '　' + vals.panelSanfang]),
   ]));
   aside.appendChild(h('p', { style: `margin:16px 0 0; font-size:10.5px; color:${T.ghost2}; letter-spacing:1px;` }, '※ 簡釋文案，供閱讀命盤參考'));
+
+  aside.appendChild(h('button', {
+    onclick: vals.openAiPanel,
+    style: `margin-top:16px; width:100%; padding:11px 0; background:transparent; border:1.5px solid ${T.cinnabar}; color:${T.cinnabar}; font-family:'Noto Serif TC',serif; font-size:14px; font-weight:700; letter-spacing:4px; cursor:pointer; border-radius:2px; transition:all .2s;`,
+  }, '✦ AI 綜合解盤'));
+
   return aside;
+}
+
+function aiPanel(vals) {
+  const { T } = vals;
+  const body = h('div', {
+    onclick: vals.stopClick,
+    style: `width:min(480px, 92vw); max-height:80vh; overflow-y:auto; background:${T.card}; border:1px solid ${T.lineStrong}; box-shadow:0 24px 80px rgba(0,0,0,.45); padding:26px 26px 22px; display:flex; flex-direction:column; gap:16px; animation:riseIn .35s ease both;`,
+  });
+
+  body.appendChild(h('div', { style: 'display:flex; align-items:flex-start; justify-content:space-between; gap:10px;' }, [
+    h('span', { style: `font-family:'Noto Serif TC',serif; font-size:19px; font-weight:900; letter-spacing:3px; color:${T.cinnabar};` }, 'AI 解盤・僅供參考'),
+    h('button', { onclick: vals.closeAiPanel, style: `width:28px; height:28px; border:1px solid ${T.line}; background:transparent; color:${T.faint}; cursor:pointer; font-size:14px; line-height:1; border-radius:2px;` }, '✕'),
+  ]));
+
+  if (vals.aiLoading) {
+    body.appendChild(h('p', { style: `margin:20px 0; text-align:center; font-size:13px; letter-spacing:3px; color:${T.faint};` }, '觀星推演中…'));
+  } else if (vals.aiError) {
+    body.appendChild(h('p', { style: `margin:20px 0; text-align:center; font-size:13px; letter-spacing:1px; color:${T.shaColor};` }, vals.aiError.message));
+  } else {
+    const sectionsCol = h('div', { style: 'display:flex; flex-direction:column; gap:14px;' }, vals.aiSections.map((sec) => h('div', { style: 'display:flex; flex-direction:column; gap:5px;' }, [
+      sec.title ? h('span', { style: `font-family:'Noto Serif TC',serif; font-size:14px; font-weight:700; letter-spacing:2px; color:${T.gold};` }, sec.title) : null,
+      h('p', {
+        style: sec.title
+          ? `margin:0; font-size:13px; line-height:1.9; color:${T.soft}; letter-spacing:.5px; text-wrap:pretty;`
+          : `margin:0; font-size:12px; line-height:1.8; color:${T.ghost}; letter-spacing:.5px; font-style:italic;`,
+      }, sec.body),
+    ])));
+    body.appendChild(sectionsCol);
+  }
+
+  body.appendChild(h('div', { style: `height:1px; background:linear-gradient(90deg, ${T.line}, transparent); margin-top:4px;` }));
+  body.appendChild(h('p', { style: `margin:0; font-size:10.5px; color:${T.ghost2}; letter-spacing:1px; text-align:center;` }, 'AI 生成內容，僅供娛樂參考'));
+
+  return h('div', {
+    onclick: vals.closeAiPanel,
+    style: 'position:fixed; inset:0; background:rgba(14,12,20,.66); z-index:110; display:flex; align-items:center; justify-content:center; padding:20px; animation:fadeIn .25s ease both;',
+  }, body);
 }
 
 function shareModal(vals) {
@@ -331,6 +374,7 @@ export function renderApp(root, vals) {
   if (vals.showInput) page.appendChild(inputScreen(vals));
   if (vals.showChart) page.appendChild(chartScreen(vals));
   if (vals.shareOpen) page.appendChild(shareModal(vals));
+  if (vals.aiPanelOpen) page.appendChild(aiPanel(vals));
 
   root.appendChild(page);
 }
