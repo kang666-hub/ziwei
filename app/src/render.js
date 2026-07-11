@@ -2,6 +2,7 @@
 // 用 h()/svg() 建真正的 DOM，取代原本 Claude Design 內部框架的字串模板引擎。
 // 版面、間距、字級、配色全部照抄，只是換一種寫法。
 import { h, svg } from './h.js';
+import { generateAndShare, mountControls } from './sharecard.js';
 
 function seg(list) {
   return list.map((b) => h('button', {
@@ -341,8 +342,9 @@ function shareModal(vals) {
       ]),
     ]),
     h('span', { style: `font-size:9.5px; letter-spacing:3px; color:${T.ghost2};` }, 'ZIWEI.APP　新中式排盤'),
+    h('div', { style: 'width:100%;', ref: (el) => mountControls(el) }),
     h('div', { style: 'display:flex; gap:8px; width:100%; margin-top:2px;' }, [
-      h('button', { style: `flex:1; padding:10px 0; background:${T.cinnabar}; color:#FBF7EC; border:none; cursor:pointer; font-size:13px; letter-spacing:3px; border-radius:2px;` }, '下載圖卡'),
+      h('button', { onclick: (e) => generateAndShare(vals, e.currentTarget), style: `flex:1; padding:10px 0; background:${T.cinnabar}; color:#FBF7EC; border:none; cursor:pointer; font-size:13px; letter-spacing:3px; border-radius:2px;` }, '下載圖卡'),
       h('button', { onclick: vals.closeShare, style: `flex:1; padding:10px 0; background:transparent; color:${T.mid}; border:1px solid ${T.line}; cursor:pointer; font-size:13px; letter-spacing:3px; border-radius:2px;` }, '關　閉'),
     ]),
   ]);
