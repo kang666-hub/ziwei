@@ -1,0 +1,16 @@
+{
+  "name": "ziwei-report-generator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "本機 CLI：生辰 -> iztro 排盤 -> Anthropic API 生成內容 -> 新中式 HTML -> PDF 流年運勢報告書",
+  "type": "module",
+  "scripts": {
+    "generate": "node generate.js"
+  },
+  "dependencies": {
+    "iztro": "2.5.8",
+    "@anthropic-ai/sdk": "^0.71.0",
+    "puppeteer": "^24.0.0",
+    "dotenv": "^17.0.0"
+  }
+}

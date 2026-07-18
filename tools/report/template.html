@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>流年運勢報告書</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg1:#F4EFE1; --bg2:#F2ECDD; --bg3:#EFE7D4;
+    --card:#FBF7EC; --center-bg:#F7F1E2;
+    --ink:#2B2620; --soft:#57503F; --mid:#6B6255; --faint:#8A7E6C;
+    --line:#C9B48A; --line-strong:#A5824A; --gold:#A5824A;
+    --cinnabar:#B8402F; --cinna-deep:#8F2F21;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    color: var(--ink);
+    background: linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 60%, var(--bg3) 100%);
+    font-size: 13px;
+    line-height: 1.9;
+  }
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 18mm 16mm;
+    position: relative;
+    page-break-after: always;
+  }
+  .page:last-child { page-break-after: auto; }
+  h1, h2, h3 { font-family: 'Noto Serif TC', serif; margin: 0 0 8mm; color: var(--cinna-deep); }
+  h1 { font-size: 26px; letter-spacing: 4px; }
+  h2 {
+    font-size: 18px; letter-spacing: 2px;
+    border-bottom: 1.5px solid var(--line-strong);
+    padding-bottom: 4mm;
+  }
+  p { margin: 0 0 4mm; color: var(--soft); }
+
+  /* 封面 */
+  .cover { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .cover .eyebrow { color: var(--gold); letter-spacing: 6px; font-size: 12px; margin-top: 4mm; }
+  .cover h1 { font-size: 30px; margin: 4mm 0 2mm; }
+  .cover .year-tag {
+    font-family: 'Noto Serif TC', serif;
+    color: var(--cinnabar); font-size: 15px; letter-spacing: 3px; margin-bottom: 8mm;
+  }
+  .cover .seal {
+    width: 56px; height: 56px; border-radius: 50%;
+    border: 2px solid var(--cinnabar); color: var(--cinnabar);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Noto Serif TC', serif; font-size: 12px; letter-spacing: 2px;
+    margin-bottom: 6mm;
+  }
+  .info-table, .mutagen-table {
+    width: 100%; border-collapse: collapse; text-align: left;
+    background: var(--card); border: 1px solid var(--line);
+  }
+  .info-table td { padding: 2mm 5mm; border-bottom: 1px solid var(--line); font-size: 12px; }
+  .info-table td.label { color: var(--faint); width: 26%; }
+  .info-table tr:last-child td { border-bottom: none; }
+  .section-title-mini {
+    font-family: 'Noto Serif TC', serif; color: var(--gold);
+    font-size: 12px; letter-spacing: 2px; margin: 6mm 0 2mm; text-align: left; width: 100%;
+  }
+
+  /* 內文章節 */
+  .chapter-body { text-align: justify; }
+  .month-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
+  .month-card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 3px;
+    padding: 4mm 5mm;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .month-card .month-num {
+    font-family: 'Noto Serif TC', serif; color: var(--cinnabar);
+    font-size: 14px; margin-bottom: 2mm;
+  }
+  .month-card .row { margin-bottom: 1.5mm; font-size: 12px; }
+  .month-card .row .tag { color: var(--gold); margin-right: 2mm; }
+  .month-card .row .val { color: var(--soft); }
+
+  .action-list { list-style: none; padding: 0; margin: 0; counter-reset: action; }
+  .action-list li {
+    counter-increment: action; position: relative; padding: 3mm 5mm 3mm 12mm;
+    margin-bottom: 3mm; background: var(--card); border: 1px solid var(--line);
+    border-radius: 3px; color: var(--soft);
+  }
+  .action-list li::before {
+    content: counter(action);
+    position: absolute; left: 4mm; top: 50%; transform: translateY(-50%);
+    font-family: 'Noto Serif TC', serif; color: var(--cinnabar); font-weight: 700;
+  }
+
+  /* 頁腳 */
+  .footer {
+    position: absolute; bottom: 10mm; left: 16mm; right: 16mm;
+    display: flex; justify-content: space-between;
+    font-size: 10px; color: var(--faint); border-top: 1px solid var(--line); padding-top: 3mm;
+  }
+
+  /* 末頁免責聲明 */
+  .disclaimer { background: var(--center-bg); border: 1px solid var(--line); padding: 8mm; border-radius: 4px; }
+  .disclaimer p { font-size: 12px; color: var(--mid); }
+  .contact { margin-top: 10mm; text-align: center; color: var(--gold); font-family: 'Noto Serif TC', serif; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+
+<div class="page cover">
+  <div class="eyebrow">KANG.LOG ・ 紫微斗數</div>
+  <div class="seal">流年<br>運勢</div>
+  <h1>流年運勢報告書</h1>
+  <div class="year-tag">{{YEAR}} 年　流年 {{YEARLY_GANZHI}}</div>
+
+  <div class="section-title-mini">盤主資訊</div>
+  <table class="info-table">
+    <tr><td class="label">性別</td><td>{{CLIENT_GENDER}}</td></tr>
+    <tr><td class="label">國曆生辰</td><td>{{CLIENT_BIRTH_SOLAR}}</td></tr>
+    <tr><td class="label">農曆生辰</td><td>{{CLIENT_BIRTH_LUNAR}}</td></tr>
+  </table>
+
+  <div class="section-title-mini">命盤摘要</div>
+  <table class="info-table">
+    <tr><td class="label">五行局</td><td>{{CLIENT_BUREAU}}</td></tr>
+    <tr><td class="label">命主／身主</td><td>{{CLIENT_MINGZHU}} ／ {{CLIENT_SHENZHU}}</td></tr>
+    <tr><td class="label">命宮</td><td>{{CLIENT_MINGGONG}}</td></tr>
+    <tr><td class="label">身宮</td><td>{{CLIENT_SHENGONG}}</td></tr>
+    <tr><td class="label">生年四化</td><td>{{NATAL_MUTAGEN}}</td></tr>
+    <tr><td class="label">{{YEAR}} 流年命宮</td><td>{{YEARLY_MINGGONG}}</td></tr>
+    <tr><td class="label">{{YEAR}} 流年四化</td><td>{{YEARLY_MUTAGEN}}</td></tr>
+  </table>
+
+  <div class="footer">
+    <span>製表日期：{{GENERATED_DATE}}</span>
+    <span>本命盤主 專屬報告</span>
+  </div>
+</div>
+
+<div class="page">
+  <h2>第一章・全年總覽</h2>
+  <div class="chapter-body"><p>{{SUMMARY}}</p></div>
+  <h2 style="margin-top:14mm;">第二章・流年格局解析</h2>
+  <div class="chapter-body"><p>{{YEAR_OVERVIEW}}</p></div>
+  <div class="footer"><span>{{YEAR}} 流年運勢報告書</span><span>第一、二章</span></div>
+</div>
+
+<div class="page">
+  <h2>第三章・十二流月指引</h2>
+  <div class="month-grid">
+    {{MONTHS_HTML}}
+  </div>
+  <div class="footer"><span>{{YEAR}} 流年運勢報告書</span><span>第三章</span></div>
+</div>
+
+<div class="page">
+  <h2>第四章・事業運勢</h2>
+  <div class="chapter-body"><p>{{CAREER}}</p></div>
+  <h2 style="margin-top:14mm;">第五章・感情運勢</h2>
+  <div class="chapter-body"><p>{{LOVE}}</p></div>
+  <h2 style="margin-top:14mm;">第六章・健康運勢</h2>
+  <div class="chapter-body"><p>{{HEALTH}}</p></div>
+  <div class="footer"><span>{{YEAR}} 流年運勢報告書</span><span>第四、五、六章</span></div>
+</div>
+
+<div class="page">
+  <h2>全年行動清單</h2>
+  <ul class="action-list">
+    {{ACTIONS_HTML}}
+  </ul>
+
+  <h2 style="margin-top:16mm;">免責聲明</h2>
+  <div class="disclaimer">
+    <p>本報告書內容係依據紫微斗數命理系統推算與 AI 輔助生成，僅供人生方向參考與自我覺察之用，不構成醫療診斷、投資理財、法律或其他專業建議。如涉及健康、財務、法律等重大決策，請諮詢相關領域專業人士。</p>
+    <p>命理推算存在流派與詮釋差異，本報告呈現之內容為其中一種觀點，不保證未來事件之必然發生，請以理性態度參考使用。</p>
+  </div>
+  <div class="contact">kanglog.ziwei@gmail.com</div>
+
+  <div class="footer"><span>{{YEAR}} 流年運勢報告書</span><span>末頁</span></div>
+</div>
+
+</body>
+</html>

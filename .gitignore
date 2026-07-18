@@ -1,3 +1,6 @@
 app/node_modules/
 app/dist/
 .DS_Store
+tools/report/.env
+tools/report/output/
+tools/report/node_modules/
