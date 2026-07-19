@@ -50,12 +50,6 @@ function buildPalaces(astrolabe) {
   }));
 }
 
-function mutagenList(mutagenArr) {
-  return (mutagenArr || [])
-    .map((starName, i) => (starName ? { star: starName, hua: MUTAGEN_ORDER[i] } : null))
-    .filter(Boolean);
-}
-
 /** 星曜名稱 → 本命宮位名稱的查表，供化曜補宮位用（避免模型自行猜測化曜聚合）。 */
 function buildStarPalaceMap(palaces) {
   const map = new Map();
@@ -100,8 +94,7 @@ function buildStarIndex(palaces) {
  * 避免模型憑空猜測流月宮位；每月四化額外標註化曜實際所在的本命宮位，
  * 避免模型誤以為當月四化星都聚在流月命宮而虛構「齊聚／交會」。
  */
-function buildMonthlyLayers(astrolabe, palaces, year) {
-  const starPalaceMap = buildStarPalaceMap(palaces);
+function buildMonthlyLayers(astrolabe, palaces, year, starPalaceMap) {
   const months = [];
   for (let lunarMonth = 1; lunarMonth <= 12; lunarMonth++) {
     const solar = lunar2solar(`${year}-${lunarMonth}-15`);
@@ -135,10 +128,11 @@ export function buildChart({ date, time, gender, year }) {
   const mingPalace = palaces.find((p) => p.name === '命宮');
   const shenPalace = palaces.find((p) => p.isBodyPalace);
 
+  const starPalaceMap = buildStarPalaceMap(palaces);
   const h = astrolabe.horoscope(`${year}-06-01`);
   const yearlyIndex = h.yearly.index;
   const yearlyPalace = palaces[yearlyIndex];
-  const monthly = buildMonthlyLayers(astrolabe, palaces, year);
+  const monthly = buildMonthlyLayers(astrolabe, palaces, year, starPalaceMap);
   const starIndex = buildStarIndex(palaces);
 
   return {
@@ -163,7 +157,7 @@ export function buildChart({ date, time, gender, year }) {
       earthlyBranch: h.yearly.earthlyBranch,
       ganzhi: h.yearly.heavenlyStem + h.yearly.earthlyBranch,
       mingGong: { index: yearlyIndex, natalPalaceName: yearlyPalace.name, branch: yearlyPalace.branch },
-      mutagen: mutagenList(h.yearly.mutagen),
+      mutagen: mutagenListWithPalace(h.yearly.mutagen, starPalaceMap),
       palaceNames: h.yearly.palaceNames,
     },
     monthly,
