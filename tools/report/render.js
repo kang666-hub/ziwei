@@ -40,7 +40,7 @@ function fillTemplate(template, chart, content) {
     SAMPLE_NOTICE: chart.input.sample ? '※ 範例報告・盤主為虛構人物' : '',
     CLIENT_GENDER: center.genderLabel,
     CLIENT_BIRTH_SOLAR: center.solarDisplay,
-    CLIENT_BIRTH_LUNAR: center.lunarDisplay,
+    CLIENT_BIRTH_LUNAR: center.lunarDisplay.replace('腊', '臘'),
     CLIENT_BUREAU: center.bureau,
     CLIENT_MINGZHU: center.mingZhu,
     CLIENT_SHENZHU: center.shenZhu,

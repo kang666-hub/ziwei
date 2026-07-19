@@ -139,7 +139,7 @@ export function buildChart({ date, time, gender, year }) {
     input: { date, time, hourLabel: hourMeta.label, gender, genderZh, year },
     center: {
       genderLabel: yinYangGender(astrolabe),
-      solarDisplay: astrolabe.solarDate.replace(/-/g, '/') + ' ' + astrolabe.timeRange.split('~')[0],
+      solarDisplay: astrolabe.solarDate.replace(/-/g, '/') + ' ' + time,
       lunarDisplay: astrolabe.lunarDate + ' ' + astrolabe.time,
       sign: astrolabe.sign,
       zodiac: astrolabe.zodiac,
