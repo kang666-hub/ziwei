@@ -66,6 +66,10 @@
     font-family: 'Noto Serif TC', serif; color: var(--gold);
     font-size: 12px; letter-spacing: 2px; margin: 6mm 0 2mm; text-align: left; width: 100%;
   }
+  .sample-badge {
+    width: 100%; text-align: left; color: var(--cinnabar);
+    font-size: 10px; margin-top: 2mm; min-height: 1px;
+  }
 
   /* 內文章節 */
   .chapter-body { text-align: justify; }
@@ -123,6 +127,7 @@
     <tr><td class="label">國曆生辰</td><td>{{CLIENT_BIRTH_SOLAR}}</td></tr>
     <tr><td class="label">農曆生辰</td><td>{{CLIENT_BIRTH_LUNAR}}</td></tr>
   </table>
+  <div class="sample-badge">{{SAMPLE_NOTICE}}</div>
 
   <div class="section-title-mini">命盤摘要</div>
   <table class="info-table">

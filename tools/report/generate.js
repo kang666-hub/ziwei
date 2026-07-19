@@ -6,10 +6,12 @@ import { renderPdf } from './render.js';
 const PRICE_PER_MTOK = { input: 3.0, output: 15.0 };
 
 function parseArgs(argv) {
+  const sample = argv.includes('--sample');
+  const rest = argv.filter((a) => a !== '--sample');
   const args = {};
-  for (let i = 0; i < argv.length; i += 2) {
-    const key = argv[i].replace(/^--/, '');
-    args[key] = argv[i + 1];
+  for (let i = 0; i < rest.length; i += 2) {
+    const key = rest[i].replace(/^--/, '');
+    args[key] = rest[i + 1];
   }
   const required = ['date', 'time', 'gender', 'year'];
   for (const key of required) {
@@ -20,6 +22,7 @@ function parseArgs(argv) {
     time: args.time,
     gender: args.gender,
     year: Number(args.year),
+    sample,
   };
 }
 
@@ -33,7 +36,9 @@ async function main() {
 
   console.log('=== 排盤摘要（供人工核對）===');
   const chart = buildChart(input);
+  chart.input.sample = input.sample;
   const { center, yearly } = chart;
+  if (input.sample) console.log('（範例模式：封面將顯示「範例報告・盤主為虛構人物」標示）');
   console.log(`生辰：國曆 ${input.date} ${chart.input.hourLabel}　${center.genderLabel}`);
   console.log(`農曆：${center.lunarDisplay}`);
   console.log(`五行局：${center.bureau}　命主：${center.mingZhu}　身主：${center.shenZhu}`);

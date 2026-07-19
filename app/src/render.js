@@ -276,6 +276,39 @@ function panelAside(vals, T) {
   return aside;
 }
 
+/** 解盤成功後的導購鉤子：試閱範例 PDF ＋ mailto 購買佔位（等綠界核准後換付款連結）。 */
+function reportPromo(vals) {
+  const { T } = vals;
+  return h('div', {
+    style: `margin-top:2px; padding:16px 16px 14px; background:${T.centerBg}; border:1px solid ${T.lineStrong}; border-radius:2px; display:flex; flex-direction:column; gap:8px;`,
+  }, [
+    h('span', {
+      style: `font-family:'Noto Serif TC',serif; font-size:14px; font-weight:700; letter-spacing:1.5px; color:${T.cinnabar};`,
+    }, '想知道你的 2026 該做什麼、該避什麼？'),
+    h('p', {
+      style: `margin:0; font-size:12px; line-height:1.8; color:${T.soft}; letter-spacing:.5px;`,
+    }, '流年運勢報告書——十二流月逐月指引＋年度行動清單，專屬你的命盤'),
+    h('div', { style: 'display:flex; align-items:baseline; gap:8px;' }, [
+      h('span', { style: `font-size:12px; color:${T.ghost}; text-decoration:line-through;` }, 'NT$249'),
+      h('span', {
+        style: `font-family:'Noto Serif TC',serif; font-size:16px; font-weight:900; color:${T.cinnabar}; letter-spacing:1px;`,
+      }, '早鳥 NT$149'),
+    ]),
+    h('div', { style: 'display:flex; gap:8px; margin-top:4px; flex-wrap:wrap;' }, [
+      h('a', {
+        href: '/ziwei/sample_report_2026.pdf',
+        target: '_blank',
+        rel: 'noopener',
+        style: `flex:1; min-width:110px; text-align:center; padding:9px 0; border:1px solid ${T.line}; color:${T.mid}; font-size:12px; letter-spacing:2px; text-decoration:none; border-radius:2px; box-sizing:border-box;`,
+      }, '試閱範例報告'),
+      h('a', {
+        href: 'mailto:kanglog.ziwei@gmail.com?subject=流年報告書購買',
+        style: `flex:1; min-width:110px; text-align:center; padding:9px 0; background:${T.cinnabar}; color:#FBF7EC; font-size:12px; letter-spacing:2px; text-decoration:none; border-radius:2px; box-sizing:border-box;`,
+      }, '我要購買'),
+    ]),
+  ]);
+}
+
 function aiPanel(vals) {
   const { T } = vals;
   const body = h('div', {
@@ -302,6 +335,7 @@ function aiPanel(vals) {
       }, sec.body),
     ])));
     body.appendChild(sectionsCol);
+    body.appendChild(reportPromo(vals));
   }
 
   body.appendChild(h('div', { style: `height:1px; background:linear-gradient(90deg, ${T.line}, transparent); margin-top:4px;` }));

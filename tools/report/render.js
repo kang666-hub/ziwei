@@ -37,6 +37,7 @@ function fillTemplate(template, chart, content) {
   const replacements = {
     YEAR: String(yearly.year),
     YEARLY_GANZHI: yearly.ganzhi,
+    SAMPLE_NOTICE: chart.input.sample ? '※ 範例報告・盤主為虛構人物' : '',
     CLIENT_GENDER: center.genderLabel,
     CLIENT_BIRTH_SOLAR: center.solarDisplay,
     CLIENT_BIRTH_LUNAR: center.lunarDisplay,
