@@ -3,6 +3,18 @@
 // 版面、間距、字級、配色全部照抄，只是換一種寫法。
 import { h, svg } from './h.js';
 import { generateAndShare, mountControls } from './sharecard.js';
+import './sponsor.css';
+
+const SPONSOR_URL = 'https://p.ecpay.com.tw/C095CB1';
+
+function sponsorStamp() {
+  return h('a', {
+    href: SPONSOR_URL,
+    target: '_blank',
+    rel: 'noopener',
+    class: 'sponsor-stamp',
+  }, '隨喜贊助');
+}
 
 function seg(list) {
   return list.map((b) => h('button', {
@@ -226,11 +238,12 @@ function chartScreen(vals) {
 
 function siteFooter(T) {
   return h('div', {
-    style: `position:relative; z-index:70; margin:18px 0 0; padding-top:14px; border-top:1px solid ${T.headerLine}; display:flex; flex-direction:column; align-items:center; gap:4px; font-size:12px; color:${T.ghost}; letter-spacing:.5px; text-align:center;`,
+    style: `position:relative; z-index:70; margin:18px 0 0; padding-top:14px; border-top:1px solid ${T.headerLine}; display:flex; flex-direction:column; align-items:center; gap:10px; font-size:12px; color:${T.ghost}; letter-spacing:.5px; text-align:center;`,
   }, [
     h('p', { style: 'margin:0;' }, '本站為免費線上排盤工具，內容僅供娛樂與參考，不構成醫療、法律、投資等專業建議'),
     h('p', { style: 'margin:0;' }, '聯絡信箱：kanglog.ziwei@gmail.com'),
     h('p', { style: 'margin:0;' }, '© 2026 KANG.LOG ・ 排盤引擎 iztro'),
+    sponsorStamp(),
   ]);
 }
 
@@ -276,7 +289,7 @@ function panelAside(vals, T) {
   return aside;
 }
 
-/** 解盤成功後的導購鉤子：試閱範例 PDF ＋ mailto 購買佔位（等綠界核准後換付款連結）。 */
+/** 解盤成功後的導購鉤子：試閱範例 PDF ＋ 綠界購買連結（生辰資訊走備註欄收集）。 */
 function reportPromo(vals) {
   const { T } = vals;
   return h('div', {
@@ -302,10 +315,15 @@ function reportPromo(vals) {
         style: `flex:1; min-width:110px; text-align:center; padding:9px 0; border:1px solid ${T.line}; color:${T.mid}; font-size:12px; letter-spacing:2px; text-decoration:none; border-radius:2px; box-sizing:border-box;`,
       }, '試閱範例報告'),
       h('a', {
-        href: 'mailto:kanglog.ziwei@gmail.com?subject=流年報告書購買',
+        href: 'https://p.ecpay.com.tw/DBDC8DF',
+        target: '_blank',
+        rel: 'noopener',
         style: `flex:1; min-width:110px; text-align:center; padding:9px 0; background:${T.cinnabar}; color:#FBF7EC; font-size:12px; letter-spacing:2px; text-decoration:none; border-radius:2px; box-sizing:border-box;`,
       }, '我要購買'),
     ]),
+    h('p', {
+      style: `margin:2px 0 0; font-size:10.5px; line-height:1.7; color:${T.ghost2}; letter-spacing:.5px;`,
+    }, '付款時請於備註填寫：國曆生日＋出生時間＋性別，報告書將於 1 個工作天內寄至您填寫的 Email'),
   ]);
 }
 
@@ -339,7 +357,10 @@ function aiPanel(vals) {
   }
 
   body.appendChild(h('div', { style: `height:1px; background:linear-gradient(90deg, ${T.line}, transparent); margin-top:4px;` }));
-  body.appendChild(h('p', { style: `margin:0; font-size:10.5px; color:${T.ghost2}; letter-spacing:1px; text-align:center;` }, 'AI 生成內容，僅供娛樂參考'));
+  body.appendChild(h('div', { style: 'display:flex; align-items:center; justify-content:center; gap:10px;' }, [
+    h('p', { style: `margin:0; font-size:10.5px; color:${T.ghost2}; letter-spacing:1px; text-align:center;` }, 'AI 生成內容，僅供娛樂參考'),
+    !vals.aiLoading && !vals.aiError ? sponsorStamp() : null,
+  ]));
 
   return h('div', {
     onclick: vals.closeAiPanel,
